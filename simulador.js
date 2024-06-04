@@ -9,9 +9,10 @@ class Cable {
 };
 
 class Component {
-	constructor(name,pins,voltage,state){
+	constructor(name,input_pins,output_pins,voltage,state){
 		this.name = name;
-		this.pins = pins;
+		this.input_pins = input_pins;
+		this.output_pins = output_pins;
 		this.voltage = voltage;
 		this.state = state;
 	}
@@ -34,19 +35,27 @@ const cables = [];
 let cables_check = [];
 
 //Pin Lists
-const power_supply_pins = ["24V","0V","2R","2S","2T","2N","Ground"];
-const button_pins = ["11","12","13","14","21","22","23","24"];
+const power_supply_pins = ["0V","2N","Ground","24V","2R","2S","2T"];
+const power_supply_input_pins = ["0V","2N","Ground"];
+const power_supply_output_pins = ["24V","2R","2S","2T"];
+const button_pins = ["11","13","21","23","12","14","22","24"];
+const button_input_pins = ["11","13","21","23"];
+const button_output_pins = ["12","14","22","24"];
 const led_pins = ["X1","X2"];
-const circuit_breaker_pins = ["1","2","3","4","5","6","13","14","21","22"];
+const led_input_pins = ["X1"];
+const led_output_pins = ["X2"];
+const circuit_breaker_input_pins = ["1","3","5","13","21"];
+const circuit_breaker_output_pins = ["2","4","6","14","22"];
+const circuit_breaker_pins = ["1","3","5","13","21","2","4","6","14","22"];
 
 // Component Objects
-const power_supply =  new Component("power_supply",power_supply_pins,null,null);
-const button_1 =  new Component("button_1",button_pins,null,null);
-const button_2 =  new Component("button_2",button_pins,null,null);
-const led_1 =  new Component("led_1",led_pins,null,null);
-const led_2 =  new Component("led_2",led_pins,null,null);
-const led_3 =  new Component("led_3",led_pins,null,null);
-const circuit_breaker =  new Component("circuit_breaker",circuit_breaker_pins,null,null);
+const power_supply =  new Component("power_supply",power_supply_input_pins,power_supply_output_pins,null,"off");
+const button_1 =  new Component("button_1",button_input_pins,button_output_pins,null,"off");
+const button_2 =  new Component("button_2",button_input_pins,button_output_pins,null,"off");
+const led_1 =  new Component("led_1",led_input_pins,led_output_pins,null,"on");
+const led_2 =  new Component("led_2",led_input_pins,led_output_pins,null,"on");
+const led_3 =  new Component("led_3",led_input_pins,led_output_pins,null,"on");
+const circuit_breaker =  new Component("circuit_breaker",circuit_breaker_input_pins,circuit_breaker_output_pins,null,"off");
 
 // Component Terminals used on the UI
 const componentTerminals = {
@@ -58,7 +67,6 @@ const componentTerminals = {
 	button_2: button_pins,
 	circuit_breaker: circuit_breaker_pins
 };
-
 
 function updateTerminals(componentSelectId, terminalSelectId) {
     const componentSelect = document.getElementById(componentSelectId);
@@ -102,7 +110,7 @@ function initializeConnections(){
 		createCable("led_1", "X2", "power_supply", "0V", null);
 		createCable("led_2", "X2", "power_supply", "0V", null);
 }
-//initializeConnections();
+initializeConnections();
 
 function createConnection() {
     const component1 = document.getElementById('component-select-1').value;
@@ -124,32 +132,61 @@ function createConnection() {
     } else {
         alert('Por favor, selecione componentes e terminais para ambos os lados.');
     }
-	
-	console.log(cables);
-	console.log(cables_check);
 }
 
-const root = new Node("root", null, [], [], [], null); 
+const root = new Node("root", null, null, [], [], null); 
 
 function createCircuitRoot(){
 	//name, component, terminal, childrenList, childrenNodes, previousNode
-	//let root = new Node("root", null, [], [], [], null);
-	
 	for(var i=0; i<cables.length;i++){
-		if(cables[i].output_component == "power_supply" || cables[i].input_component == "power_supply"){
-			//console.log(cables[i]);
-			if(cables[i].input_terminal != "0V" && cables[i].input_terminal != "2N" && cables[i].input_terminal && "Ground"){
-				let newNode = new Node("power_supply_" + String(cables[i].output_terminal), "power_supply", cables[i].output_terminal, [], [], root);
-					root.childrenList.push(newNode.name);
-					root.childrenNodes.push(newNode);
-				}
+		if(cables[i].output_component == "power_supply" && checkOutputTerminal(cables[i].output_terminal) || 
+			cables[i].input_component == "power_supply" && checkOutputTerminal(cables[i].input_terminal)){
+			
+			if(cables[i].input_component == "power_supply"){
+				revertCable(cables[i]);
 			}
+
+			//console.log(cables[i]);
+			let newNode = new Node("power_supply_" + String(cables[i].output_terminal), getComponentbyName("power_supply"), cables[i].output_terminal, [], [], root);
+			if(cables[i].output_terminal == "24V"){
+				newNode.component.voltage = "24V";
+			}else{
+				newNode.component.voltage = "380V"
+			}
+			root.childrenList.push(newNode.name);
+			root.childrenNodes.push(newNode);
+		}
 	}
 	
-	console.log(root);
+	//console.log(root);
 	for(var i=0; i<root.childrenNodes.length;i++){
 		createCircuitTree(root.childrenNodes[i]);
 	}
+}
+
+function checkOutputTerminal(terminal){
+	//console.log(terminal);
+	for(var i=0; i<power_supply_output_pins.length;i++){
+		if(power_supply_output_pins[i] == terminal){
+			return true;
+		}
+	}
+	for(var i=0; i<led_output_pins.length;i++){
+		if(led_output_pins[i] == terminal){
+			return true;
+		}
+	}
+	for(var i=0; i<button_output_pins.length;i++){
+		if(button_output_pins[i] == terminal){
+			return true;
+		}
+	}
+	for(var i=0; i<circuit_breaker_output_pins.length;i++){
+		if(circuit_breaker_output_pins[i] == terminal){
+			return true;
+		}
+	}
+	return false;
 }
 
 function revertCable(cable){
@@ -164,24 +201,49 @@ function revertCable(cable){
 	cable.output_terminal = initial_input_terminal;
 }
 
+function getComponentbyName(name){
+	switch(name){
+		case "power_supply": return power_supply;
+		case "led_1": return led_1;
+		case "led_2": return led_2;
+		case "led_3": return led_3;
+		case "button_1": return button_1;
+		case "button_2": return button_2;
+		case "circuit_breaker": return circuit_breaker;
+		default: return null;
+	}
+}
+
+function checkComponentOutputTerminal(component_name, component_input_terminal){
+
+}
+
 function createCircuitTree(currentNode){
-	console.log(currentNode);
-	//console.log(cables_check);
+	//console.log(currentNode);
+	// Node constructor(name, component, terminal, childrenList, childrenNodes, previousNode)
+	// Component constructor(name,input_pins,output_pins,voltage,state)
+
 	for(var i=0; i<cables_check.length;i++){
-		if(cables_check[i].output_component == currentNode.component && cables_check[i].output_terminal == currentNode.terminal){
-			//console.log(cables_check[i]);
+		if(cables_check[i].output_component == currentNode.component.name && checkOutputTerminal(cables_check[i].output_terminal) || 
+		cables_check[i].input_component == currentNode.component.name && checkOutputTerminal(cables_check[i].input_terminal)){
+			
+			if(cables_check[i].input_component == currentNode.component.name){
+				revertCable(cables_check[i]);
+			}
+
 			// Cria novo node filho a partir do cabo
-			let newNode = new Node(String(cables_check[i].input_component) + "_" + String(cables_check[i].input_terminal), String(cables_check[i].input_component), String(cables_check[i].input_terminal), [], [], currentNode);
+			let newNode = new Node(String(cables_check[i].input_component) + "_" + String(cables_check[i].input_terminal), getComponentbyName(cables_check[i].input_component), 
+									String(cables_check[i].input_terminal), [], [], currentNode);
+			
 			currentNode.childrenList.push(newNode.name);
 			currentNode.childrenNodes.push(newNode);
-			
-			
+
 			// Exclui cabo da check_list
 			let new_array = cables_check.filter(function(current_cable){return current_cable !== cables_check[i];});
 			cables_check = new_array;
-			createCircuitTree(newNode);
 		}
 	}
+	
 	console.log(root);
 	//printCircuit();
 }
