@@ -102,7 +102,7 @@ function initializeConnections(){
 		createCable("led_1", "X2", "power_supply", "0V", null);
 		createCable("led_2", "X2", "power_supply", "0V", null);
 }
-initializeConnections();
+//initializeConnections();
 
 function createConnection() {
     const component1 = document.getElementById('component-select-1').value;
