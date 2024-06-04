@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Selector</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 15%;
+            width: 100%;
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+        .main {
+            
+            width: 50%;
+            background-color: #e0e0e0;
+            padding: 20px;
+        }
+        .footer {
+            
+            width: 50%;
+            background-color: #d0d0d0;
+            padding: 20px;
+        }
+		.visual {
+			height: 85%;
+			display: flex;
+			flex-direction: row;
+		}
+        select {
+            width: 200px;
+            padding: 5px;
+            margin: 5px;
+        }
+		h2 {
+			padding: 5px;
+		}
+    </style>
+</head>
+<body>
+    <div class="container">
+		<div id="title"><h2>Crie as conexões</h2></div>
+
+        <div class="header">
+            <div>
+                <label for="component-select-1"><b>Escolha o componente 1:</b></label>
+                <select id="component-select-1" onchange="updateTerminals('component-select-1', 'terminal-select-1')">
+                    <option value="">Selecione um componente</option>
+                    <option value="power_supply">Alimentação</option>
+                    <option value="led_1">LED 1</option>
+					<option value="led_2">LED 2</option>
+					<option value="led_3">LED 3</option>
+                    <option value="button_1">Botão 1</option>
+					<option value="button_2">Botão 2</option>
+                    <option value="circuit_breaker">Disjuntor</option>
+                </select>
+                <select id="terminal-select-1">
+                    <option value="">Selecione um terminal</option>
+                </select>
+            </div>
+            <div>
+                <label for="component-select-2"><b>Escolha o componente 2:</b></label>
+                <select id="component-select-2" onchange="updateTerminals('component-select-2', 'terminal-select-2')">
+                    <option value="">Selecione um componente</option>
+                    <option value="power_supply">Alimentação</option>
+                    <option value="led_1">LED 1</option>
+					<option value="led_2">LED 2</option>
+					<option value="led_3">LED 3</option>
+                    <option value="button_1">Botão 1</option>
+					<option value="button_2">Botão 2</option>
+                    <option value="circuit_breaker">Disjuntor</option>
+                </select>
+                <select id="terminal-select-2">
+                    <option value="">Selecione um terminal</option>
+                </select>
+            </div>
+			<div>
+				<button id="criar" onclick="createConnection()">Criar conexão</button>
+			</div>
+        </div>
+		<div class = "visual">
+			<div class="main">
+				<h2>Lista de cabos</h2>
+				<div id="connections"></div>
+			</div>
+			<div class="footer">
+				<h2>Visualização</h2>
+				<button id="criar" onclick="createCircuitRoot()">Visualizar</button>
+			</div>
+		</div>
+    </div>
+
+    <script src="simulador.js"></script>
+</body>
+</html>
