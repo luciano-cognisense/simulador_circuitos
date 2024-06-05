@@ -247,7 +247,12 @@ function getComponentOutputTerminal(component_name, component_input_terminal){
 								case "21": return "22";
 								case "23": return "24";
 						}
-		case "button_2": return button_2;
+		case "button_2": switch(component_input_terminal){
+								case "11": return "12";
+								case "13": return "14";
+								case "21": return "22";
+								case "23": return "24";
+						}
 		case "circuit_breaker": return circuit_breaker;
 		default: return null;
 	}
