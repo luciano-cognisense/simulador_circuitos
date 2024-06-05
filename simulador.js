@@ -320,11 +320,13 @@ function createCircuitTree(currentNode){
 
 function printCircuit(){
 	createCircuitRoot();
-	
+	const circuitDiv = document.getElementById('circuit');
+
 	let nivelAtual = [root];
 	//console.log(root);
 	while (nivelAtual.length > 0) {
 		//console.log(nivelAtual);
+		const circuitElement = document.createElement('p');
 		const proximoNivel = [];
 		let saida = "";
 
@@ -335,6 +337,8 @@ function printCircuit(){
 		}
 
 		console.log(saida.trim());
+		circuitElement.textContent = saida.trim();
+        circuitDiv.appendChild(circuitElement);
 		nivelAtual = proximoNivel;
 	}
 
