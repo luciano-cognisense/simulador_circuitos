@@ -128,9 +128,10 @@ function initializeConnections(){
 		createCable("button_1", "12", "led_2", "X1", null);
 		createCable("button_1", "14", "led_1", "X1", null);
 		createCable("led_1", "X2", "power_supply", "0V", null);
-		createCable("led_2", "X2", "power_supply", "0V", null);
+		createCable("power_supply", "0V", "led_2", "X2", null);
+		//createCable("led_2", "X2", "power_supply", "0V", null);
 }
-//initializeConnections();
+initializeConnections();
 
 // Cria conexões ao apertar o botão "Criar conexão" na interface web
 function createConnection() {
@@ -321,7 +322,7 @@ function createCircuitTree(currentNode){
 				let new_array = cables_check.filter(function(current_cable){return current_cable !== cables_check[i];});
 				cables_check = new_array;
 				
-				console.log(newNode);
+				//console.log(newNode);
 				if(checkOutputTerminal(newNode.output_terminal)){
 					createCircuitTree(newNode);
 				}
@@ -339,7 +340,9 @@ function createCircuitTree(currentNode){
 
 
 function printCircuit(){
-	createCircuitRoot();
+	//createCircuitRoot();
+	createNodeTree();
+	console.log(root);
 	const circuitDiv = document.getElementById('circuit');
 
 	let nivelAtual = [root];
@@ -361,5 +364,53 @@ function printCircuit(){
         circuitDiv.appendChild(circuitElement);
 		nivelAtual = proximoNivel;
 	}
+
+}
+
+function revertNode(node){
+	let initial_input_component = node.input_component;
+	let initial_input_terminal = node.input_terminal;
+	let initial_output_component = node.output_component;
+	let initial_output_terminal = node.output_terminal;	
+	
+	node.input_component = initial_output_component;
+	node.input_terminal = initial_output_terminal;
+	node.output_component = initial_input_component;
+	node.output_terminal = initial_input_terminal;
+}
+
+function testPowerSupply(){
+	for(var i=0; i<nodeVector.length;i++){
+		if(nodeVector[i].input_component == "power_supply" && checkOutputTerminal(nodeVector[i].input_terminal)){
+			console.log("component power supply em terminal de saída foi classificado como input. Reverter Node");
+			//console.log(nodeVector[i]);
+			revertNode(nodeVector[i]);
+			//console.log(nodeVector[i]);
+		}
+		else if(nodeVector[i].output_component == "power_supply" && !checkOutputTerminal(nodeVector[i].output_terminal)){
+			//console.log(nodeVector[i]);
+			console.log("component power supply em terminal de entrada foi classificado como output. Reverter Node");
+			revertNode(nodeVector[i]);
+			//console.log(nodeVector[i]);
+		}
+	}
+}
+
+
+const nodeVector = [];
+function createNodeTree(){
+	// Component constructor(name,input_pins,output_pins,voltage,state){
+	// Node constructor(name, input_component, output_component, input_terminal,output_terminal, childrenList, childrenNodes, previousNode)
+	// Cable constructor(output_component, output_terminal, input_component, input_terminal, voltage)
+
+	for(var i=0; i < cables.length;i++){
+		//console.log(cables[i]);
+		let newNode = new Node(cables[i].input_component + "_" + cables[i].input_terminal, cables[i].input_component,cables[i].output_component, 
+		cables[i].input_terminal, cables[i].output_terminal, [], [],null);
+		//console.log(newNode);
+		nodeVector.push(newNode);
+	}
+	testPowerSupply();
+	console.log(nodeVector);
 
 }
