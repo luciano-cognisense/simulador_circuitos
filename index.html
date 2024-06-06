@@ -28,14 +28,34 @@
             padding: 10px;
         }
         .main {
-            
-            width: 50%;
+            height: 100%;
+            width: 30%;
             background-color: #e0e0e0;
             padding: 20px;
         }
+        .esquematico{
+            width: 30%;
+            background-color: #FFFFFF;
+            padding: 20px;
+        }
+        .superior{
+            width:100%;
+            height: 30%;
+        }
+        #img_esquematico_div{
+            text-align: center;
+            width: 100%;
+            height: 70%;
+            
+        }
+        #img_esquematico{
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
         .footer {
             
-            width: 50%;
+            width: 40%;
             background-color: #d0d0d0;
             padding: 20px;
         }
@@ -56,7 +76,7 @@
 </head>
 <body>
     <div class="container">
-		<div id="title"><h2>Crie as conexões v0.4</h2></div>
+		<div id="title"><h2>Crie as conexões v0.5</h2></div>
 
         <div class="header">
             <div>
@@ -99,6 +119,22 @@
 			<div class="main">
 				<h2>Lista de cabos</h2>
 				<div id="connections"></div>
+			</div>
+            <div class="esquematico">
+                <div class="superior">
+                    <h2>Esquemático</h2>
+                    <label for="nivel-select"><b>Escolha o nível:</b></label>
+                    <select id="nivel-select" onchange="loadImage('nivel-select')">
+                        <option value="">Selecione um nível</option>
+                        <option value="nivel_1">Nível 1</option>
+                        <option value="nivel_2">Nível 2</option>
+                        <option value="nivel_3">Nível 3</option>
+                        <option value="nivel_4">Nível 4</option>
+                    </select>
+                </div>
+				<div id="img_esquematico_div">
+                    <img id="img_esquematico"/>
+                </div>
 			</div>
 			<div class="footer">
 				<h2>Visualização</h2>

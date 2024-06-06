@@ -90,11 +90,26 @@ function updateTerminals(componentSelectId, terminalSelectId) {
     }
 }
 
+// Carrega imagem do esquemático
+function loadImage(nivel_select_id){
+    const nivelSelect = document.getElementById(nivel_select_id);
+	const myImage = document.getElementById("img_esquematico");
+	const selectedNivel = nivelSelect.value;
+
+	switch(selectedNivel){
+		case "nivel_1": myImage.src = "nivel_1.png";; break;
+		case "nivel_2": myImage.src = "nivel_2.png";; break;
+		case "nivel_3": myImage.src = "nivel_3.png";; break;
+		case "nivel_4":	myImage.src = "nivel_4.png";; break;
+	}
+}
+
 // Cria o cabo independente da interface (Modo teste)
 function createCable(component1, terminal1, component2, terminal2, voltage){
 		const connectionsDiv = document.getElementById('connections');
 		const connectionElement = document.createElement('p');
-		
+		connectionElement.style.fontSize = "12px";
+
 		let new_cable = new Cable(component1, terminal1, component2, terminal2, null);
 		cables.push(new_cable);
 		cables_check.push(new_cable);
@@ -115,7 +130,7 @@ function initializeConnections(){
 		createCable("led_1", "X2", "power_supply", "0V", null);
 		createCable("led_2", "X2", "power_supply", "0V", null);
 }
-initializeConnections();
+//initializeConnections();
 
 // Cria conexões ao apertar o botão "Criar conexão" na interface web
 function createConnection() {
