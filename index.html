@@ -57,6 +57,26 @@
             width: 40%;
             background-color: #d0d0d0;
             padding: 20px;
+            display: flex;
+			flex-direction: column;
+        }
+        .title {
+            display: flex;
+			flex-direction: row;
+        }
+        .content{
+            display: flex;
+			flex-direction: row;
+        }
+        .esperado {
+            width: 50%;
+            background-color: #d0FFd0;
+            padding: 2%;
+        }
+        .realizado {
+            width: 50%;
+            background-color: #d0d0FF;
+            padding: 2%;
         }
 		.visual {
 			height: 85%;
@@ -75,7 +95,7 @@
 </head>
 <body>
     <div class="container">
-		<div id="title"><h2>Crie as conexões v0.5</h2></div>
+		<div id="title"><h2>Crie as conexões v0.6</h2></div>
 
         <div class="header">
             <div>
@@ -136,10 +156,18 @@
                 </div>
 			</div>
 			<div class="footer">
-				<h2>Visualização</h2>
-				<!--<button id="criar" onclick="createCircuitRoot()">Criar</button>-->
-                <button id="criar" onclick="printCircuit()">Imprimir</button>
-                <div id="circuit"></div>
+                <div class="title">
+                    <h2>Visualização</h2>
+                    <button id="criar" onclick="printCircuit()">Imprimir</button>
+                </div>
+                <div class="content">
+                    <div class="esperado">
+                        <div id="reference"></div>
+                    </div>
+                    <div class="realizado">
+                        <div id="circuit"></div>
+                    </div>
+                </div>
 			</div>
 		</div>
     </div>
