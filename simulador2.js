@@ -65,8 +65,8 @@ const level_3_reference = ["power_supply_0V(0V)",
 							"led_1_X2(0V)",
 							"led_2_X1(button_1_12)",
 							"led_2_X2(0V)",
-							"button_1_11(circuit_breaker_14,button_1_13)",
-							"button_1_13(circuit_breaker_14,button_1_11)",
+							"button_1_11(button_1_13,circuit_breaker_14)",
+							"button_1_13(button_1_11,circuit_breaker_14)",
 							"button_1_12(led_2_X1)",
 							"button_1_14(led_1_X1)",
 							"circuit_breaker_13(24V)",
@@ -77,8 +77,8 @@ const level_4_reference = ["power_supply_0V(0V)",
 							"power_supply_24V(24V)",
 							"led_2_X1(button_1_12)",
 							"led_2_X2(0V)",
-							"button_1_11(circuit_breaker_14,button_1_13)",
-							"button_1_13(circuit_breaker_14,button_1_11)",
+							"button_1_11(button_1_13,circuit_breaker_14)",
+							"button_1_13(button_1_11,circuit_breaker_14)",
 							"button_1_12(led_2_X1)",
 							"button_1_14(0V)",
 							"circuit_breaker_13(24V)",
@@ -204,9 +204,9 @@ function loadImage(nivel_select_id){
 
 	switch(selectedNivel){
 		case "nivel_1": myImage.src = "nivel_1.png"; current_level = "level_1"; break;
-		case "nivel_2": myImage.src = "nivel_2.png"; current_level = "level_2"; break;
-		case "nivel_3": myImage.src = "nivel_3.png"; current_level = "level_3"; break;
-		case "nivel_4":	myImage.src = "nivel_4.png"; current_level = "level_4"; break;
+		case "nivel_2": myImage.src = "nivel_2.png"; current_level = "level_2"; /*initializeConnections_2();*/ break;
+		case "nivel_3": myImage.src = "nivel_3.png"; current_level = "level_3"; /*initializeConnections_3();*/ break;
+		case "nivel_4":	myImage.src = "nivel_4.png"; current_level = "level_4"; /*initializeConnections_4();*/ break;
 	}
 }
 
@@ -240,7 +240,50 @@ function initializeConnections(){
 		createCable("power_supply", "0V", "led_2", "X2", null);
 		//createCable("led_2", "X2", "power_supply", "0V", null);
 }
-//initializeConnections();
+
+function initializeConnections_2(){
+	//Montagem padrão de nível 3 para testes
+	createCable("power_supply", "24V", "button_1", "13", null);
+	createCable("power_supply", "24V", "button_1", "11", null);
+	createCable("button_1", "12", "led_2", "X1", null);
+	createCable("button_1", "14", "led_1", "X1", null);
+	createCable("led_1", "X2", "led_2", "X2", null);
+	createCable("power_supply", "0V", "led_2", "X2",null);
+	//createCable("led_2", "X2", "power_supply", "0V", null);
+}
+
+function initializeConnections_3(){
+	//Montagem padrão de nível 3 para testes
+	//createCable("power_supply", "24V", "button_1", "11", null);
+	createCable("circuit_breaker", "13", "power_supply", "24V", null);
+	createCable("circuit_breaker", "14", "button_1", "11", null);
+	createCable("circuit_breaker", "14", "button_1", "13", null);
+	//createCable("button_1", "13", "power_supply", "24V", null);
+	//createCable("button_1", "11", "button_1", "13", null);
+	createCable("button_1", "12", "led_2", "X1", null);
+	createCable("button_1", "14", "led_1", "X1", null);
+	createCable("led_1", "X2", "power_supply", "0V", null);
+	createCable("power_supply", "0V", "led_2", "X2", null);
+	//createCable("led_2", "X2", "power_supply", "0V", null);
+}
+
+
+function initializeConnections_4(){
+	//Montagem padrão de nível 3 para testes
+	//createCable("power_supply", "24V", "button_1", "11", null);
+	createCable("circuit_breaker", "13", "power_supply", "24V", null);
+	createCable("circuit_breaker", "14", "button_1", "11", null);
+	createCable("circuit_breaker", "14", "button_1", "13", null);
+	//createCable("button_1", "13", "power_supply", "24V", null);
+	//createCable("button_1", "11", "button_1", "13", null);
+	createCable("button_1", "12", "led_2", "X1", null);
+	createCable("button_1", "14", "power_supply", "0V", null);
+	createCable("led_2", "X2", "power_supply", "0V", null);
+	//createCable("power_supply", "0V", "led_2", "X2", null);
+	//createCable("led_2", "X2", "power_supply", "0V", null);
+}
+
+//initializeConnections_2();
 
 // Verifica se o terminal é output
 function checkOutputTerminal(terminal){
@@ -557,16 +600,26 @@ function getTerminalByCompleteName(complete_name){
 
 function getTerminalVoltage(reference,pin){
 	if(reference.voltage == null){
-		pin.voltage = pin.connectedTo;
-		reference.voltage = reference.connectedTo;
-	}else if(typeof reference.voltage == "object" && reference.voltage.length > 1 && typeof pin.voltage == "object"){
-			console.log("objects");
-			console.log(pin);
-			console.log(reference);
-		
-		addUniqueElements(pin.voltage,reference.voltage);
-		removeElement(pin.voltage,pin.component+"_"+pin.name);
+		if(pin.voltage != null){
+			if(typeof pin.voltage == "object"){
+				reference.voltage = [];
+				addUniqueElements(reference.voltage,pin.voltage,reference.component+"_"+reference.name);
+				reference.voltage.sort();
+			}
+			else{
+				reference.voltage = pin.voltage;
+			}
+		}else{
+			pin.voltage = pin.connectedTo;
+			reference.voltage = reference.connectedTo;
 		}
+	}else if(typeof reference.voltage == "object" && reference.voltage.length > 1 && typeof pin.voltage == "object"){			
+			addUniqueElements(pin.voltage,reference.voltage,pin.component+"_"+pin.name);
+			addUniqueElements(reference.voltage,pin.voltage,reference.component+"_"+reference.name);
+			pin.voltage.sort();
+			reference.voltage.sort();
+			
+	}
 	else if(typeof reference.voltage != "object"){
 		//console.log("é objeto");
 		pin.voltage = reference.voltage;
@@ -596,8 +649,10 @@ function transferVoltage(currentComponent){
 }
 
 function updateVoltage(component){
+	transferVoltage(component);
 	//transferVoltage(component);
-	propagatePowerSupply();
+	//transferVoltage(component);*/
+	//propagatePowerSupply();
 	component.input_pins.forEach((pin)=> printVoltage(component,pin));
 	component.output_pins.forEach((pin)=> printVoltage(component,pin));
 }
@@ -624,33 +679,82 @@ function updateVoltageLists(currentComponent){
 	//currentComponent.output_pins.forEach((pin)=> printVoltage(currentComponent,pin));
 }
 
-function propagatePowerSupply(){
+/*function propagatePowerSupply(){
 	power_supply.input_pins.forEach((pin)=>{
-		if(pin.connectedTo != null){
-			pin.connectedTo.forEach((target)=> target.voltage = pin.voltage);
+		if(pin.connectedTo.length > 0){
+			console.log(pin);
+			pin.connectedTo.forEach((target)=> getTerminalByCompleteName(target).voltage = pin.voltage);
 		}
 	});
 	power_supply.output_pins.forEach((pin)=>{
-		if(pin.connectedTo != null){
-			pin.connectedTo.forEach((target) =>target.voltage = pin.voltage);
+		if(pin.connectedTo.length > 0){
+			console.log(pin);
+			pin.connectedTo.forEach((target) => getTerminalByCompleteName(target).voltage = pin.voltage);
 		}
 	});
+}*/
 
-}
+/*function propagatePowerSupply(){
+	componentVector.forEach((currentComponent)=>{
+		for(var i=0; i<currentComponent.input_pins.length;i++){
+			if(currentComponent.input_pins[i].connectedTo.length > 0){
+				let terminals = currentComponent.input_pins[i].connectedTo;
+				let terminalArray = [];
+				terminals.forEach((pin)=> terminalArray.push(getTerminalByCompleteName(pin)));
+				//console.log(terminals)
+				terminalArray.forEach((pin)=> {
+					if(pin.component == "power_supply"){
+						console.log(currentComponent.input_pins[i]);
+					}
+				});
+				//getTerminalVoltage(currentComponent.input_pins[i],pin));
+			}
+		}
+		for(var i=0; i<currentComponent.output_pins.length;i++){
+			if(currentComponent.output_pins[i].connectedTo.length > 0){
+				let terminals = currentComponent.output_pins[i].connectedTo;
+				let terminalArray = [];
+				terminals.forEach((pin)=> terminalArray.push(getTerminalByCompleteName(pin)));
+				terminalArray.forEach((pin)=> getTerminalVoltage(currentComponent.output_pins[i],pin));
+			}
+		}
+	});
+}*/
 
-function addUniqueElements(targetArray, sourceArray) {
-    console.log(targetArray);
-	console.log(sourceArray);
+
+
+function addUniqueElements(targetArray, sourceArray, complete_name) {	
+	
 	sourceArray.forEach(element => {
         if (!targetArray.includes(element)) {
-			targetArray.push(element);
+			if(element!= complete_name){
+				targetArray.push(element);
+			}
         }
     });
+}
+//testeRemove();
+function testeRemove(){
+	
+	let array1 = ['button_1_11', 'button_1_13', 'circuit_breaker_14'];
+	console.log(array1);
+	let element = 'circuit_breaker_14';
+	removeElement(array1, element);
+	console.log(array1);
 }
 
 function removeElement(array, element) {
     const index = array.indexOf(element);
     if (index !== -1) {
         array.splice(index, 1);
+		console.log("Remove: " + element);
     }
+}
+
+function removeElementByValue(array, value) {
+    const index = array.indexOf(value);
+    if (index !== -1) {
+        array.splice(index, 1);
+    }
+    return array; // Retornar o array modificado
 }
