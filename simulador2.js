@@ -351,7 +351,7 @@ function printReference(referenceArray){
 		case "level_4": referenceArray = level_4_reference;break;
 	}*/
 	const referenceDiv = document.getElementById('reference');
-	referenceDiv.innerHTML = "";
+	referenceDiv.innerHTML = "component_PIN(Voltage)";
 		
 	for(var i=0;i<referenceArray.length;i++){
 			const referenceElement = document.createElement('p');
@@ -388,7 +388,7 @@ function printCircuit(){
 		printReference(referenceArray);
 		createNodeTree();
 		const circuitDiv = document.getElementById('circuit');
-		circuitDiv.innerHTML = "";
+		circuitDiv.innerHTML = "component_PIN(Voltage)";
 
 		for(var i=0;i<circuitParameters.length;i++){
 			const circuitElement = document.createElement('p');
