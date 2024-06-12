@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Component Selector</title>
+    <title>Ambiente de Teste do Simulador</title>
     <style>
         body {
             margin: 0;
@@ -63,6 +63,7 @@
         .title {
             display: flex;
 			flex-direction: row;
+            align-items: center;
         }
         .content{
             display: flex;
@@ -70,12 +71,12 @@
         }
         .esperado {
             width: 50%;
-            background-color: #d0FFd0;
+            background-color: #e0e0e0;
             padding: 2%;
         }
         .realizado {
             width: 50%;
-            background-color: #d0d0FF;
+            background-color: #f0f0f0;
             padding: 2%;
         }
 		.visual {
@@ -91,11 +92,14 @@
 		h2 {
 			padding: 5px;
 		}
+        button {
+            height: 40%;            
+        }
     </style>
 </head>
 <body>
     <div class="container">
-		<div id="title"><h2>Crie as conexões v0.6</h2></div>
+		<div id="title"><h2>Crie as conexões v0.8</h2></div>
 
         <div class="header">
             <div>
@@ -157,7 +161,7 @@
 			</div>
 			<div class="footer">
                 <div class="title">
-                    <h2>Visualização</h2>
+                    <h2>Comparação</h2>
                     <button id="criar" onclick="printCircuit()">Imprimir</button>
                 </div>
                 <div class="content">
