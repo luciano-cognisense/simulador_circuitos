@@ -29,14 +29,48 @@
         }
         .main {
             height: 100%;
-            width: 30%;
+            width: 23%;
             background-color: #e0e0e0;
             padding: 20px;
+        }
+        .main > button{
+            height: 6%;
+        }
+
+        .interactions {
+            height: 100%;
+            width: 12%;
+            background-color: #F0F0F0;
+            padding: 20px;
+            
         }
         .esquematico{
             width: 30%;
             background-color: #FFFFFF;
             padding: 20px;
+        }
+        #interactions_components{
+            display: flex;
+			flex-direction: column;
+            padding: 5%;
+            margin: 5%;
+            text-align: center;
+        }
+        #interactions_components *{
+            margin: 3%;
+        }
+        #led_1, #led_2, #led_3{
+            text-align: center;
+        }
+        #img_led_1, #img_led_2, #img_led_3{
+            display: flex;
+			flex-direction: column;
+            
+            width: 40%;
+            height: 40%;
+            object-fit: contain;
+            margin: auto;
+            display: block;
         }
         .superior{
             width:100%;
@@ -46,7 +80,6 @@
             text-align: center;
             width: 100%;
             height: 70%;
-            
         }
         #img_esquematico{
             width: 80%;
@@ -54,7 +87,7 @@
             object-fit: contain;
         }
         .footer {
-            width: 40%;
+            width: 35%;
             background-color: #d0d0d0;
             padding: 20px;
             display: flex;
@@ -99,7 +132,7 @@
 </head>
 <body>
     <div class="container">
-		<div id="title"><h2>Crie as conexões v0.9</h2></div>
+		<div id="title"><h2>Crie as conexões v0.95</h2></div>
 
         <div class="header">
             <div>
@@ -142,7 +175,25 @@
 			<div class="main">
 				<h2>Lista de cabos</h2>
 				<div id="connections"></div>
+                <button id="limpar" onclick="refresh()">Limpar</button>
 			</div>
+            <div class = "interactions">
+                <h2>Interações</h2>
+				<div id="interactions_components">
+                    <button id="circuit_breaker" style="background-color: #DD2244;">Disjuntor/Off</button>
+                    <button id="button_1">Botão 1</button>
+                    <button id="button_2">Botão 2</button>
+                    <div id="led_1">LED 1
+                        <img id="img_led_1" src="led_off_alpha.png" style="height: 40%"/>
+                    </div>
+                    <div id="led_2">LED 2
+                        <img id="img_led_2" src="led_off_alpha.png" style="height: 40%"/>
+                    </div>
+                    <div id="led_3">LED 3
+                        <img id="img_led_3" src="led_off_alpha.png" style="height: 40%"/>
+                    </div>
+                </div>
+            </div>
             <div class="esquematico">
                 <div class="superior">
                     <h2>Esquemático</h2>

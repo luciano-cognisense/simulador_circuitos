@@ -1,4 +1,72 @@
 let current_level = null;
+const interactions_components = document.getElementById("interactions_components");
+const interactive_circuit_breaker = document.getElementById("circuit_breaker");
+const interactive_button_1 = document.getElementById("button_1");
+const interactive_button_2 = document.getElementById("button_2");
+const interactive_led_1 = document.getElementById("img_led_1");
+const interactive_led_2 = document.getElementById("img_led_2");
+const interactive_led_3 = document.getElementById("img_led_3");
+interactions_components.style.visibility = "hidden";
+
+// Adiciona o listener para o evento clique
+interactive_circuit_breaker.addEventListener('click', function() {
+	toggleCircuitBreak();
+	switch(current_level){
+		case "level_1": break;
+		case "level_2": break;
+		case "level_3": if(circuit_breaker.state == "on"){interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_on_alpha.png'}else{
+														interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_off_alpha.png'}; break;
+		case "level_4": if(circuit_breaker.state == "on"){interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_on_alpha.png'}else{
+			interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_off_alpha.png'}; break;
+	}
+});
+
+// Adiciona o listener para o evento mousedown
+interactive_button_1.addEventListener('mousedown', function() {
+
+	switch(current_level){
+		case "level_1": break;
+		case "level_2": button_1.state = "on"; interactive_led_1.src = 'led_on_alpha.png'; interactive_led_2.src = 'led_off_alpha.png'; break;
+		case "level_3": if(circuit_breaker.state == "on"){button_1.state = "on"; interactive_led_1.src = 'led_on_alpha.png'; interactive_led_2.src = 'led_off_alpha.png';}else{
+						button_1.state = "off"; interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_off_alpha.png';} break;
+		case "level_4": if(circuit_breaker.state == "on"){button_1.state = "on"; interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_off_alpha.png';
+						toggleCircuitBreak()}else{interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_off_alpha.png';} break;
+	}
+});
+
+// Adiciona o listener para o evento mousedown
+interactive_button_2.addEventListener('mousedown', function() {
+	button_2.state = "on";
+});
+
+// Adiciona o listener para o evento mouseup
+interactive_button_1.addEventListener('mouseup', function() {
+    switch(current_level){
+		case "level_1": break;
+		case "level_2": button_1.state = "off"; interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_on_alpha.png'; break;
+		case "level_3": if(circuit_breaker.state == "on"){button_1.state = "off"; interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_on_alpha.png';}else{
+			button_1.state = "off"; interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_off_alpha.png';
+		} break;
+		case "level_4": break;
+	}
+});
+
+interactive_button_2.addEventListener('mouseup', function() {
+	button_2.state = "off";
+});
+
+function toggleCircuitBreak(){
+	if(interactive_circuit_breaker.textContent == "Disjuntor/On"){
+		interactive_circuit_breaker.textContent = "Disjuntor/Off";
+		interactive_circuit_breaker.style.backgroundColor = "#DD2244"
+		circuit_breaker.state = "off";
+	}else{
+		interactive_circuit_breaker.textContent = "Disjuntor/On";
+		interactive_circuit_breaker.style.backgroundColor = "#00DD22"
+		circuit_breaker.state = "on";
+	}
+}
+
 
 class Cable {
 	constructor(output_component, output_terminal, input_component, input_terminal, voltage){
@@ -158,9 +226,9 @@ const circuit_breaker_output_pins = [circuit_breaker_2,circuit_breaker_4,circuit
 const power_supply =  new Component("power_supply",power_supply_input_pins,power_supply_output_pins,"off");
 const button_1 =  new Component("button_1",button_1_input_pins,button_1_output_pins,"off");
 const button_2 =  new Component("button_2",button_2_input_pins,button_2_output_pins,"off");
-const led_1 =  new Component("led_1",led_1_input_pins,led_1_output_pins,"on");
-const led_2 =  new Component("led_2",led_2_input_pins,led_2_output_pins,"on");
-const led_3 =  new Component("led_3",led_3_input_pins,led_3_output_pins,"on");
+const led_1 =  new Component("led_1",led_1_input_pins,led_1_output_pins,"off");
+const led_2 =  new Component("led_2",led_2_input_pins,led_2_output_pins,"off");
+const led_3 =  new Component("led_3",led_3_input_pins,led_3_output_pins,"off");
 const circuit_breaker =  new Component("circuit_breaker",circuit_breaker_input_pins,circuit_breaker_output_pins,"off");
 
 // Component Terminals used on the UI
@@ -329,6 +397,7 @@ function createConnection() {
         const connectionsDiv = document.getElementById('connections');
         const connectionElement = document.createElement('p');
         connectionElement.textContent = connectionText;
+		connectionElement.style.fontSize = "12px";
         connectionsDiv.appendChild(connectionElement);
 		
 		let new_cable = new Cable(component1, terminal1, component2, terminal2, null);
@@ -405,6 +474,7 @@ function printCircuit(){
 
 		if(right_answers == referenceArray.length){
 			alert("Você acertou toda a montagem. Parabéns!");
+			enableInteraction();
 		}else{
 			alert("Você acertou " + (100*right_answers/referenceArray.length) + "% do circuito. Continue tentando");
 		}
@@ -757,4 +827,21 @@ function removeElementByValue(array, value) {
         array.splice(index, 1);
     }
     return array; // Retornar o array modificado
+}
+
+function enableInteraction(){
+	interactions_components.style.visibility = "visible";
+	console.log(current_level);
+	switch(current_level){
+		case "level_1": interactive_led_1.src = 'led_on_alpha.png'; break;
+		case "level_2": interactive_led_2.src = 'led_on_alpha.png'; interactive_led_1.src = 'led_off_alpha.png'; break;
+		case "level_3": interactive_led_2.src = 'led_off_alpha.png'; interactive_led_1.src = 'led_off_alpha.png'; break;
+		case "level_4": interactive_led_2.src = 'led_off_alpha.png'; interactive_led_1.src = 'led_off_alpha.png'; break;
+	}
+}
+
+function refresh(){
+	if (confirm("Você deseja limpar todas as conexões?")) {
+		location.reload();
+	  }
 }
