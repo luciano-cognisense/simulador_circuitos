@@ -316,13 +316,13 @@ function initializeConnections_2(){
 
 function initializeConnections_3(){
 	//Montagem padrão de nível 3 para testes
-	createCable("circuit_breaker", "13", "power_supply", "24V", null);
-	createCable("circuit_breaker", "14", "button_1", "11", null);
-	createCable("circuit_breaker", "14", "button_1", "13", null);
+	createCable("power_supply", "24V", "circuit_breaker", "13", null);
+	createCable("button_1", "11","circuit_breaker", "14", null);
+	createCable("button_1", "11", "button_1", "13", null);
 	createCable("button_1", "12", "led_2", "X1", null);
 	createCable("button_1", "14", "led_1", "X1", null);
-	createCable("led_1", "X2", "power_supply", "0V", null);
-	createCable("power_supply", "0V", "led_2", "X2", null);
+	createCable("led_2", "X2", "led_1", "X2", null);
+	createCable("power_supply", "0V", "led_1", "X2", null);
 }
 
 
@@ -558,6 +558,11 @@ function createNodeTree(){
 	componentVector.forEach((component) => updateComponent(component));
 	componentVector.forEach((component) => transferVoltage(component));
 	componentVector.forEach((component) => updateVoltage(component));
+	componentVector.forEach((component) => {
+		component.input_pins.forEach((pin)=> printVoltage(component,pin));
+		component.output_pins.forEach((pin)=> printVoltage(component,pin));
+		
+	});
 	
 	console.log(nodeVector);
 	console.log(componentVector);
@@ -623,6 +628,20 @@ function getTerminalVoltage(reference,pin){
 			pin.voltage = pin.connectedTo;
 			reference.voltage = reference.connectedTo;
 		}
+	}else if(pin.voltage == null){
+			if(reference.voltage != null){
+				if(typeof reference.voltage == "object"){
+					pin.voltage = [];
+					addUniqueElements(pin.voltage,reference.voltage,pin.component+"_"+pin.name);
+					pin.voltage.sort();
+				}	
+				else{
+					pin.voltage = reference.voltage;
+				}
+			}else{
+				reference.voltage = reference.connectedTo;
+				pin.voltage = pin.connectedTo;
+			}
 	}else if(typeof reference.voltage == "object" && reference.voltage.length > 1 && typeof pin.voltage == "object"){			
 			addUniqueElements(pin.voltage,reference.voltage,pin.component+"_"+pin.name);
 			addUniqueElements(reference.voltage,pin.voltage,reference.component+"_"+reference.name);
@@ -658,14 +677,23 @@ function transferVoltage(currentComponent){
 
 function updateVoltage(component){
 	transferVoltage(component);
-	component.input_pins.forEach((pin)=> printVoltage(component,pin));
-	component.output_pins.forEach((pin)=> printVoltage(component,pin));
+	//component.input_pins.forEach((pin)=> printVoltage(component,pin));
+	//component.output_pins.forEach((pin)=> printVoltage(component,pin));
 }
 
 function addUniqueElements(targetArray, sourceArray, complete_name) {	
 	if(targetArray == null){
-		targetArray =[];
+		//targetArray =[];
+		targetArray.push(sourceArray[0])
+		console.log(complete_name);
+		console.log(targetArray);
+		console.log(sourceArray);
 	}
+	if(sourceArray == null){
+		console.log(sourceArray);
+		console.log(complete_name);
+	}
+
 	sourceArray.forEach(element => {
         if (!targetArray.includes(element)) {
 			if(element!= complete_name){
