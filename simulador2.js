@@ -263,7 +263,6 @@ function updateTerminals(componentSelectId, terminalSelectId) {
     }
 }
 
-
 // Carrega imagem do esquemático
 function loadImage(nivel_select_id){
     const nivelSelect = document.getElementById(nivel_select_id);
@@ -295,62 +294,47 @@ function createCable(component1, terminal1, component2, terminal2, voltage){
 
 // Inicializa as conexões em modo teste
 function initializeConnections(){
-		//Montagem padrão de nível 3 para testes
-		//createCable("power_supply", "24V", "button_1", "11", null);
+		//Montagem padrão para testes
 		createCable("circuit_breaker", "13", "power_supply", "24V", null);
 		createCable("circuit_breaker", "14", "button_1", "11", null);
 		createCable("circuit_breaker", "14", "button_1", "13", null);
-		//createCable("button_1", "13", "power_supply", "24V", null);
-		//createCable("button_1", "11", "button_1", "13", null);
 		createCable("button_1", "12", "led_2", "X1", null);
 		createCable("button_1", "14", "led_1", "X1", null);
 		createCable("led_1", "X2", "power_supply", "0V", null);
 		createCable("power_supply", "0V", "led_2", "X2", null);
-		//createCable("led_2", "X2", "power_supply", "0V", null);
 }
 
 function initializeConnections_2(){
-	//Montagem padrão de nível 3 para testes
+	//Montagem padrão de nível 2 para testes
 	createCable("power_supply", "24V", "button_1", "13", null);
 	createCable("power_supply", "24V", "button_1", "11", null);
 	createCable("button_1", "12", "led_2", "X1", null);
 	createCable("button_1", "14", "led_1", "X1", null);
 	createCable("led_1", "X2", "led_2", "X2", null);
 	createCable("power_supply", "0V", "led_2", "X2",null);
-	//createCable("led_2", "X2", "power_supply", "0V", null);
 }
 
 function initializeConnections_3(){
 	//Montagem padrão de nível 3 para testes
-	//createCable("power_supply", "24V", "button_1", "11", null);
 	createCable("circuit_breaker", "13", "power_supply", "24V", null);
 	createCable("circuit_breaker", "14", "button_1", "11", null);
 	createCable("circuit_breaker", "14", "button_1", "13", null);
-	//createCable("button_1", "13", "power_supply", "24V", null);
-	//createCable("button_1", "11", "button_1", "13", null);
 	createCable("button_1", "12", "led_2", "X1", null);
 	createCable("button_1", "14", "led_1", "X1", null);
 	createCable("led_1", "X2", "power_supply", "0V", null);
 	createCable("power_supply", "0V", "led_2", "X2", null);
-	//createCable("led_2", "X2", "power_supply", "0V", null);
 }
 
 
 function initializeConnections_4(){
-	//Montagem padrão de nível 3 para testes
-	//createCable("power_supply", "24V", "button_1", "11", null);
+	//Montagem padrão de nível 4 para testes
 	createCable("circuit_breaker", "13", "power_supply", "24V", null);
 	createCable("circuit_breaker", "14", "button_1", "11", null);
 	createCable("circuit_breaker", "14", "button_1", "13", null);
-	//createCable("button_1", "13", "power_supply", "24V", null);
-	//createCable("button_1", "11", "button_1", "13", null);
 	createCable("button_1", "12", "led_2", "X1", null);
 	createCable("button_1", "14", "power_supply", "0V", null);
 	createCable("led_2", "X2", "power_supply", "0V", null);
-	//createCable("power_supply", "0V", "led_2", "X2", null);
-	//createCable("led_2", "X2", "power_supply", "0V", null);
 }
-
 //initializeConnections_2();
 
 // Verifica se o terminal é output
@@ -412,13 +396,6 @@ function createConnection() {
 const root = new Node("root", null, null, null, null, [], [], null);
 
 function printReference(referenceArray){
-	/*let referenceArray;
-	switch(current_level){
-		case "level_1": referenceArray = level_1_reference;break;
-		case "level_2": referenceArray = level_2_reference;break;
-		case "level_3": referenceArray = level_3_reference;break;
-		case "level_4": referenceArray = level_4_reference;break;
-	}*/
 	const referenceDiv = document.getElementById('reference');
 	referenceDiv.innerHTML = "component_PIN(Voltage)";
 		
@@ -429,20 +406,6 @@ function printReference(referenceArray){
 			referenceDiv.appendChild(referenceElement);
 	}
 }
-
-/*function checkSuccess(){
-	let referenceArray;
-	switch(current_level){
-		case "level_1": referenceArray = level_1_reference;break;
-		case "level_2": referenceArray = level_2_reference;break;
-		case "level_3": referenceArray = level_3_reference;break;
-		case "level_4": referenceArray = level_4_reference;break;
-	}
-
-	checkElementInList(list, element)
-	referenceArray.forEach()
-
-}*/
 
 function printCircuit(){
 	if(current_level != null){
@@ -478,26 +441,6 @@ function printCircuit(){
 		}else{
 			alert("Você acertou " + (100*right_answers/referenceArray.length) + "% do circuito. Continue tentando");
 		}
-		/*
-		console.log(root);
-		let nivelAtual = [root];
-
-		while (nivelAtual.length > 0) {
-			const circuitElement = document.createElement('p');
-			circuitElement.style.fontSize = "12px";
-			const proximoNivel = [];
-			let saida = "";
-
-			for (let no of nivelAtual) {
-				saida += no.name + "\t";
-				proximoNivel.push(...no.childrenNodes);
-			}
-
-			console.log(saida.trim());
-			circuitElement.textContent = saida.trim();
-			circuitDiv.appendChild(circuitElement);
-			nivelAtual = proximoNivel;
-		}*/
 	}
 	else{
 		alert("Selecione um nível primeiro");
@@ -531,8 +474,6 @@ function testPowerSupply(){
 }
 
 function checkElementInList(list, element){
-    //console.log(list);
-    //console.log(element);
     return list.includes(element);
 }
 
@@ -611,7 +552,6 @@ function createNodeTree(){
 		nodeVector.push(mirrorNode);
 	}
 
-	//testPowerSupply();
     nodeCheck = nodeVector;
     addPowerSupplyToRoot();
 	
@@ -691,7 +631,6 @@ function getTerminalVoltage(reference,pin){
 			
 	}
 	else if(typeof reference.voltage != "object"){
-		//console.log("é objeto");
 		pin.voltage = reference.voltage;
 	}
 	return pin.voltage;
@@ -699,7 +638,6 @@ function getTerminalVoltage(reference,pin){
 
 
 function transferVoltage(currentComponent){
-	//console.log()
 	for(var i=0; i<currentComponent.input_pins.length;i++){
 		if(currentComponent.input_pins[i].connectedTo.length > 0){
 			let terminals = currentComponent.input_pins[i].connectedTo;
@@ -720,81 +658,14 @@ function transferVoltage(currentComponent){
 
 function updateVoltage(component){
 	transferVoltage(component);
-	//transferVoltage(component);
-	//transferVoltage(component);*/
-	//propagatePowerSupply();
 	component.input_pins.forEach((pin)=> printVoltage(component,pin));
 	component.output_pins.forEach((pin)=> printVoltage(component,pin));
 }
 
-function updateVoltageLists(currentComponent){
-	/*for(var i=0; i<currentComponent.input_pins.length;i++){
-		if(currentComponent.input_pins[i].voltage != null && typeof currentComponent.input_pins[i].voltage == "object"){
-			if(currentComponent.input_pins[i].voltage.length > 1){
-					//currentComponent.input_pins[i].voltage.forEach((pin)=> getTerminalVoltage(currentComponent.input_pins[i],getTerminalByCompleteName(pin)));
-			}
-		}
-	}
-	for(var i=0; i<currentComponent.output_pins.length;i++){
-		if(currentComponent.output_pins[i].voltage != null){
-			if(currentComponent.output_pins[i].voltage.length > 1){
-				if(typeof currentComponent.output_pins[i].voltage == "object"){
-					console.log(typeof currentComponent.output_pins[i].voltage + " " + currentComponent.output_pins[i].voltage);
-					//currentComponent.output_pins[i].voltage.forEach((pin)=> getTerminalVoltage(currentComponent.output_pins[i],getTerminalByCompleteName(pin)));
-				}
-			}
-		}
-	}*/
-	//currentComponent.input_pins.forEach((pin)=> printVoltage(currentComponent,pin));
-	//currentComponent.output_pins.forEach((pin)=> printVoltage(currentComponent,pin));
-}
-
-/*function propagatePowerSupply(){
-	power_supply.input_pins.forEach((pin)=>{
-		if(pin.connectedTo.length > 0){
-			console.log(pin);
-			pin.connectedTo.forEach((target)=> getTerminalByCompleteName(target).voltage = pin.voltage);
-		}
-	});
-	power_supply.output_pins.forEach((pin)=>{
-		if(pin.connectedTo.length > 0){
-			console.log(pin);
-			pin.connectedTo.forEach((target) => getTerminalByCompleteName(target).voltage = pin.voltage);
-		}
-	});
-}*/
-
-/*function propagatePowerSupply(){
-	componentVector.forEach((currentComponent)=>{
-		for(var i=0; i<currentComponent.input_pins.length;i++){
-			if(currentComponent.input_pins[i].connectedTo.length > 0){
-				let terminals = currentComponent.input_pins[i].connectedTo;
-				let terminalArray = [];
-				terminals.forEach((pin)=> terminalArray.push(getTerminalByCompleteName(pin)));
-				//console.log(terminals)
-				terminalArray.forEach((pin)=> {
-					if(pin.component == "power_supply"){
-						console.log(currentComponent.input_pins[i]);
-					}
-				});
-				//getTerminalVoltage(currentComponent.input_pins[i],pin));
-			}
-		}
-		for(var i=0; i<currentComponent.output_pins.length;i++){
-			if(currentComponent.output_pins[i].connectedTo.length > 0){
-				let terminals = currentComponent.output_pins[i].connectedTo;
-				let terminalArray = [];
-				terminals.forEach((pin)=> terminalArray.push(getTerminalByCompleteName(pin)));
-				terminalArray.forEach((pin)=> getTerminalVoltage(currentComponent.output_pins[i],pin));
-			}
-		}
-	});
-}*/
-
-
-
 function addUniqueElements(targetArray, sourceArray, complete_name) {	
-	
+	if(targetArray == null){
+		targetArray =[];
+	}
 	sourceArray.forEach(element => {
         if (!targetArray.includes(element)) {
 			if(element!= complete_name){
@@ -802,15 +673,6 @@ function addUniqueElements(targetArray, sourceArray, complete_name) {
 			}
         }
     });
-}
-//testeRemove();
-function testeRemove(){
-	
-	let array1 = ['button_1_11', 'button_1_13', 'circuit_breaker_14'];
-	console.log(array1);
-	let element = 'circuit_breaker_14';
-	removeElement(array1, element);
-	console.log(array1);
 }
 
 function removeElement(array, element) {
@@ -826,7 +688,7 @@ function removeElementByValue(array, value) {
     if (index !== -1) {
         array.splice(index, 1);
     }
-    return array; // Retornar o array modificado
+    return array;
 }
 
 function enableInteraction(){
