@@ -21,9 +21,14 @@ interactive_circuit_breaker.addEventListener('click', function() {
 	}
 });
 
+const valores = "-5.13,-0.66,3.33,6.88,10.01,12.74,15.10,17.12,18.81,20.21,21.32,22.17,22.79,23.19,23.40,23.42,23.28,22.99,22.58,22.05,21.42,20.71,19.93,19.10,18.21,17.30,16.36,15.40,14.45,13.50,12.56,11.65,10.76,9.90,9.09,8.32,7.60,6.93,6.31,5.75,5.25,4.80,4.41,4.08,3.80,3.58,3.41,3.28,3.20,3.15,3.14,3.15,3.18,3.23,3.27,3.31,3.33,3.33,3.29,3.20,3.05,2.82,2.51,2.09,1.56";
+console.log(valores.length);
+//const bufferFromArray = Buffer.from(valores);
+
 // Adiciona o listener para o evento mousedown
 interactive_button_1.addEventListener('mousedown', function() {
-
+	//client.publish('bancada', valores);
+	client.publish('/25/relay',"relay2_on");
 	switch(current_level){
 		case "level_1": break;
 		case "level_2": button_1.state = "on"; interactive_led_1.src = 'led_on_alpha.png'; interactive_led_2.src = 'led_off_alpha.png'; break;
@@ -36,11 +41,14 @@ interactive_button_1.addEventListener('mousedown', function() {
 
 // Adiciona o listener para o evento mousedown
 interactive_button_2.addEventListener('mousedown', function() {
+	client.publish('/25/relay',"relay3_on");
 	button_2.state = "on";
 });
 
 // Adiciona o listener para o evento mouseup
 interactive_button_1.addEventListener('mouseup', function() {
+	//client.publish('bancada', 'button_up');
+	client.publish('/25/relay',"relay2_off");
     switch(current_level){
 		case "level_1": break;
 		case "level_2": button_1.state = "off"; interactive_led_1.src = 'led_off_alpha.png'; interactive_led_2.src = 'led_on_alpha.png'; break;
@@ -53,6 +61,7 @@ interactive_button_1.addEventListener('mouseup', function() {
 
 interactive_button_2.addEventListener('mouseup', function() {
 	button_2.state = "off";
+	client.publish('/25/relay',"relay3_off");
 });
 
 function toggleCircuitBreak(){
@@ -60,10 +69,12 @@ function toggleCircuitBreak(){
 		interactive_circuit_breaker.textContent = "Disjuntor/Off";
 		interactive_circuit_breaker.style.backgroundColor = "#DD2244"
 		circuit_breaker.state = "off";
+		client.publish('/25/relay',"relay1_off");
 	}else{
 		interactive_circuit_breaker.textContent = "Disjuntor/On";
 		interactive_circuit_breaker.style.backgroundColor = "#00DD22"
 		circuit_breaker.state = "on";
+		client.publish('/25/relay',"relay1_on");
 	}
 }
 
@@ -271,7 +282,7 @@ function loadImage(nivel_select_id){
 
 	switch(selectedNivel){
 		case "nivel_1": myImage.src = "nivel_1.png"; current_level = "level_1"; break;
-		case "nivel_2": myImage.src = "nivel_2.png"; current_level = "level_2"; /*initializeConnections_2();*/ break;
+		case "nivel_2": myImage.src = "nivel_2.png"; current_level = "level_2"; initializeConnections_2(); break;
 		case "nivel_3": myImage.src = "nivel_3.png"; current_level = "level_3"; /*initializeConnections_3();*/ break;
 		case "nivel_4":	myImage.src = "nivel_4.png"; current_level = "level_4"; /*initializeConnections_4();*/ break;
 	}
